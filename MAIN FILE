@@ -1,0 +1,170 @@
+# LIBRARY MANAGEMENT SYSTEM
+
+
+# STEP 1: CREATE THE BOOK CLASS
+class Book:
+    def __init__(self, title, author):
+        self.title = title
+        self.author = author
+        self.available = True
+
+    # Method to borrow a book
+    def borrow(self):
+        if self.available:
+            self.available = False
+            print(f"\n'{self.title}' has been borrowed successfully.")
+        else:
+            print(f"\nSorry, '{self.title}' is already borrowed.")
+
+    # Method to return a book
+    def return_book(self):
+        if not self.available:
+            self.available = True
+            print(f"\n'{self.title}' has been returned successfully.")
+        else:
+            print(f"\n'{self.title}' was not borrowed.")
+
+
+# STEP 2: CREATE THE LIBRARY CLASS
+class Library:
+    def __init__(self):
+        self.books = []
+
+    # Add a book to the library
+    def add_book(self, book):
+        self.books.append(book)
+        print(f"\n'{book.title}' has been added to the library.")
+
+    # Display all books
+    def display_books(self):
+        if not self.books:
+            print("\nThe library has no books yet.")
+            return
+
+        print("\n===== ALL LIBRARY BOOKS =====")
+
+        for number, book in enumerate(self.books, start=1):
+            if book.available:
+                status = "Available"
+            else:
+                status = "Borrowed"
+
+            print(f"\nBook {number}")
+            print(f"Title: {book.title}")
+            print(f"Author: {book.author}")
+            print(f"Status: {status}")
+
+    # Search for a book by title or author
+    def search_book(self, search_term):
+        found = False
+
+        for book in self.books:
+            if (search_term.lower() in book.title.lower()
+                    or search_term.lower() in book.author.lower()):
+
+                status = "Available" if book.available else "Borrowed"
+
+                print("\nBook found!")
+                print(f"Title: {book.title}")
+                print(f"Author: {book.author}")
+                print(f"Status: {status}")
+
+                found = True
+
+        if not found:
+            print("\nNo matching book was found.")
+
+    # Borrow a book by title
+    def borrow_book(self, title):
+        for book in self.books:
+            if book.title.lower() == title.lower():
+                book.borrow()
+                return
+
+        print("\nThis book does not exist in the library.")
+
+    # Return a book by title
+    def return_book(self, title):
+        for book in self.books:
+            if book.title.lower() == title.lower():
+                book.return_book()
+                return
+
+        print("\nThis book does not exist in the library.")
+
+
+# STEP 3: CREATE THE LIBRARY AND ADD SAMPLE BOOKS
+my_library = Library()
+
+my_library.add_book(Book("Things Fall Apart", "Chinua Achebe"))
+my_library.add_book(Book("The Great Gatsby", "F. Scott Fitzgerald"))
+my_library.add_book(Book("Purple Hibiscus", "Chimamanda Ngozi Adichie"))
+
+
+# STEP 4: CREATE THE MENU
+while True:
+    print("\n===================================")
+    print("     LIBRARY MANAGEMENT SYSTEM")
+    print("===================================")
+    print("1. Add a book")
+    print("2. Display all books")
+    print("3. Search for a book")
+    print("4. Borrow a book")
+    print("5. Return a book")
+    print("6. Exit")
+    print("===================================")
+
+    choice = input("Enter your choice (1-6): ").strip()
+
+    # OPTION 1: ADD A BOOK
+    if choice == "1":
+        title = input("Enter the book title: ").strip()
+        author = input("Enter the author's name: ").strip()
+
+        if title and author:
+            new_book = Book(title, author)
+            my_library.add_book(new_book)
+        else:
+            print("\nTitle and author cannot be empty.")
+
+    # OPTION 2: DISPLAY ALL BOOKS
+    elif choice == "2":
+        my_library.display_books()
+
+    # OPTION 3: SEARCH FOR A BOOK
+    elif choice == "3":
+        search_term = input(
+            "Enter the book title or author's name: "
+        ).strip()
+
+        if search_term:
+            my_library.search_book(search_term)
+        else:
+            print("\nPlease enter a title or author's name.")
+
+    # OPTION 4: BORROW A BOOK
+    elif choice == "4":
+        title = input("Enter the title of the book to borrow: ").strip()
+
+        if title:
+            my_library.borrow_book(title)
+        else:
+            print("\nPlease enter a book title.")
+
+    # OPTION 5: RETURN A BOOK
+    elif choice == "5":
+        title = input("Enter the title of the book to return: ").strip()
+
+        if title:
+            my_library.return_book(title)
+        else:
+            print("\nPlease enter a book title.")
+
+    # OPTION 6: EXIT THE PROGRAM
+    elif choice == "6":
+        print("\nThank you for using the Library Management System!")
+        break
+
+    # HANDLE INVALID INPUT
+    else:
+        print("\nInvalid choice. Please enter a number from 1 to 6.")
